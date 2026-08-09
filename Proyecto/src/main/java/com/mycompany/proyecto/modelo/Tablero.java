@@ -31,34 +31,27 @@ public class Tablero {
     
     public int contarLineasPosibles(char jugadorSimbolo, char oponenteSimbolo ){
         int contador = 0;
-        
         //Evaluar 3 filas
         for(int i = 0; i<3; i++ ){
             if(matriz[i][0] != oponenteSimbolo && matriz[i][1] != oponenteSimbolo && matriz[i][2] != oponenteSimbolo){
                 contador ++;    
             }
         }
-        
         //Evaluar 3 columnas
         for(int j=0; j<3; j++){
             if(matriz[0][j] != oponenteSimbolo && matriz[1][j] != oponenteSimbolo && matriz[2][j] != oponenteSimbolo){
                 contador ++;    
             }
         }
-        
         //Evaluar DiagonalPrincipal
         if(matriz[0][0] != oponenteSimbolo && matriz[1][1] != oponenteSimbolo && matriz[2][2] != oponenteSimbolo){
                 contador ++;    
         }
-        
         //Evaluar DiagonalSecundaria
         if(matriz[0][2] != oponenteSimbolo && matriz[1][1] != oponenteSimbolo && matriz[2][0] != oponenteSimbolo){
             contador ++;    
         }
-        
-        
-        return contador;
-        
+        return contador;        
     }
     
     public void calcularUtilidad(char maquinaSimbolo, char jugadorSimbolo) {
