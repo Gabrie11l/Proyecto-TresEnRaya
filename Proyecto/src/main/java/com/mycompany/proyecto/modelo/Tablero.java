@@ -1,5 +1,8 @@
 package com.mycompany.proyecto.modelo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author alexa
@@ -60,6 +63,25 @@ public class Tablero {
         
         this.valorUtilidad = pMaquina - pJugador;
     }
+    
+    
+    public Tablero realizarJugada(int fila, int columna, char simbolo){
+        Tablero t_nuevo = new Tablero(this.matriz);
+        t_nuevo.matriz[fila][columna] = simbolo;
+        return t_nuevo;
+    }
+    
+    public List<Movimiento> obtenerCasillasVacias() {
+        List<Movimiento> vacias = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (matriz[i][j] == Simbolo.VACIO) {
+                    vacias.add(new Movimiento(i, j));
+                }
+            }
+        }
+        return vacias;
+    }
 
     public char verificarGanador() {
         for (int i = 0; i < 3; i++) {
@@ -82,6 +104,11 @@ public class Tablero {
         
         //no hay ganador
         return Simbolo.VACIO;
+    }
+    
+    
+    public boolean estaLleno() {
+        return obtenerCasillasVacias().isEmpty();
     }
     
     //getters
