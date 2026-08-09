@@ -55,15 +55,10 @@ public class Tablero {
     }
     
     public void calcularUtilidad(char maquinaSimbolo, char jugadorSimbolo) {
-        char ganador = verificarGanador();
+        int pMaquina = contarLineasPosibles(maquinaSimbolo, jugadorSimbolo);
+        int pJugador = contarLineasPosibles(jugadorSimbolo, maquinaSimbolo);
         
-        if (ganador == maquinaSimbolo) {
-            this.valorUtilidad = 10;
-        } else if (ganador == jugadorSimbolo) {
-            this.valorUtilidad = -10;
-        } else {
-            this.valorUtilidad = 0;
-        }
+        this.valorUtilidad = pMaquina - pJugador;
     }
 
     public char verificarGanador() {
