@@ -6,6 +6,7 @@ package com.mycompany.proyecto.modelo;
 
 import com.mycompany.proyecto.tda.Node;
 import com.mycompany.proyecto.tda.Tree;
+import java.util.List;
 
 /**
  *
@@ -35,6 +36,39 @@ public class minimax {
             raiz.addChild(nodoNivel1);
         }
         return new Tree<>(raiz);
+    }
+    public int evaluarArbol(Node<Tablero> raiz){
+        if(raiz.isLeaf()){
+            Tablero tablero = raiz.getData();
+            tablero.calcularUtilidad(MaquinaSimbolo, JugadorSimbolo);
+            return tablero.getValorUtilidad();
+        }
+        int utilidadMinima = Integer.MAX_VALUE;
+        for(Node<Tablero> hoja : raiz.getChildren()){
+            Tablero tablero = hoja.getData();
+            tablero.calcularUtilidad(MaquinaSimbolo, JugadorSimbolo);
+            int utilidadActual = tablero.getValorUtilidad();
+            if(utilidadMinima > utilidadActual){
+                utilidadMinima = utilidadActual;
+            }
+        }
+        return utilidadMinima;
+    }
+    public Movimiento getMejorMovimiento(Tablero actualTablero){
+        Tree<Tablero> arbolDeEstados = this.buildStateTree(actualTablero);
+        Node<Tablero> raiz = arbolDeEstados.getRoot();
+        List<Node<Tablero>> listaNodosNivel1 = raiz.getChildren();
+        List<Movimiento> casillasDisponibles = actualTablero.obtenerCasillasVacias();
+        Movimiento mejorMovimiento = null;
+        int mejorUtilidad = Integer.MIN_VALUE;
+        for(int i = 0; i< listaNodosNivel1.size(); i++){
+            int utilidadActual = this.evaluarArbol(listaNodosNivel1.get(i));
+            if(utilidadActual> mejorUtilidad){
+                mejorUtilidad = utilidadActual;
+                mejorMovimiento = casillasDisponibles.get(i);
+            }
+        }
+        return mejorMovimiento;
     }
     
 }
