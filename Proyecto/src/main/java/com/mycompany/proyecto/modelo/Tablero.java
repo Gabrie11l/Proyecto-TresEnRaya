@@ -58,6 +58,19 @@ public class Tablero {
     }
     
     public void calcularUtilidad(char maquinaSimbolo, char jugadorSimbolo) {
+        
+        char ganador = verificarGanador();
+    
+        if (ganador == maquinaSimbolo) {
+            this.valorUtilidad = 1000;
+            return;
+        } 
+
+        if (ganador == jugadorSimbolo) {
+            this.valorUtilidad = -1000;
+            return;
+        }
+        
         int pMaquina = contarLineasPosibles(maquinaSimbolo, jugadorSimbolo);
         int pJugador = contarLineasPosibles(jugadorSimbolo, maquinaSimbolo);
         
