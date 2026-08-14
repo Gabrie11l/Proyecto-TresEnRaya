@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.proyecto.controlador.PrimaryController">
+<VBox alignment="CENTER" spacing="16.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.proyecto.controlador.PrimaryController">
     <padding>
         <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
     </padding>
@@ -17,21 +17,28 @@
                 <Font name="System Bold" size="22.0" />
             </font>
         </Label>
-        
+
+        <VBox alignment="CENTER_LEFT" spacing="8.0">
+            <children>
+                <Label text="Modo de juego:" />
+                <ComboBox fx:id="cmbModo" prefWidth="250.0" />
+            </children>
+        </VBox>
+
         <VBox alignment="CENTER_LEFT" spacing="8.0">
             <children>
                 <Label text="Selecciona tu símbolo:" />
                 <ComboBox fx:id="cmbSimbolo" prefWidth="250.0" />
             </children>
         </VBox>
-        
+
         <VBox alignment="CENTER_LEFT" spacing="8.0">
             <children>
                 <Label text="¿Quién inicia el juego?:" />
                 <ComboBox fx:id="cmbIniciador" prefWidth="250.0" />
             </children>
         </VBox>
-        
+
         <Button fx:id="btnIniciar" mnemonicParsing="false" onAction="#handleIniciarJuego" prefWidth="250.0" style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="Iniciar Partida" />
     </children>
 </VBox>

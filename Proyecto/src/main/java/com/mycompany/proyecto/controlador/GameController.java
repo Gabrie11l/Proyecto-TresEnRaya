@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.mycompany.proyecto.controlador;
+
 import com.mycompany.proyecto.modelo.minimax;
 import com.mycompany.proyecto.modelo.Movimiento;
 import com.mycompany.proyecto.modelo.Simbolo;
@@ -20,10 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-/**
- *
- * @author Jared
- */
+
 public class GameController {
 
     @FXML
@@ -35,32 +29,42 @@ public class GameController {
     private Button[][] botonesTablero;
     private Tablero tableroActual;
     private minimax ia;
-    private char simboloHumano;
-    private char simboloIA;
-    private boolean esTurnoHumano;
-    private boolean configuracionInicioHumano;
 
-    public void iniciarPartida(char simboloHumano, char simboloIA, boolean empiezaHumano) {
-    this.simboloHumano = simboloHumano;
-    this.simboloIA = simboloIA;
-    this.configuracionInicioHumano = empiezaHumano; // Guarda la preferencia fija
-    this.esTurnoHumano = empiezaHumano;
-    this.tableroActual = new Tablero();
-    this.ia = new minimax(simboloIA, simboloHumano);
-    this.botonesTablero = new Button[3][3];
+    private char simboloJugador1;
+    private char simboloJugador2;
+    private boolean turnoJugador1;
+    private boolean esContraComputadora;
+    private boolean configuracionInicioJugador1;
 
-    construirTableroGrafico();
+    public void iniciarPartida(char simboloJugador1, char simboloJugador2,
+                               boolean empiezaJugador1, boolean contraComputadora) {
+        this.simboloJugador1 = simboloJugador1;
+        this.simboloJugador2 = simboloJugador2;
+        this.turnoJugador1 = empiezaJugador1;
+        this.configuracionInicioJugador1 = empiezaJugador1;
+        this.esContraComputadora = contraComputadora;
 
-    if (!esTurnoHumano) {
-        lblEstado.setText("Pensando la computadora...");
-        ejecutarTurnoIA();
-    } else {
-        lblEstado.setText("Turno de: Humano (" + simboloHumano + ")");
+        this.tableroActual = new Tablero();
+        this.botonesTablero = new Button[3][3];
+        if (contraComputadora) {
+        this.ia = new minimax(simboloJugador2, simboloJugador1);
+        } 
+        else {
+        this.ia = null;
     }
-}
+
+        construirTableroGrafico();
+        actualizarEstado();
+
+        // La computadora puede comenzar si fue seleccionada iniciador
+        if (esContraComputadora && !turnoJugador1) {
+            ejecutarTurnoComputadora();
+        }
+    }
 
     private void construirTableroGrafico() {
         gridTablero.getChildren().clear();
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Button btn = new Button("");
@@ -69,7 +73,6 @@ public class GameController {
 
                 final int fila = i;
                 final int columna = j;
-
                 btn.setOnAction(e -> handleClicCasilla(fila, columna));
 
                 botonesTablero[i][j] = btn;
@@ -79,39 +82,85 @@ public class GameController {
     }
 
     private void handleClicCasilla(int fila, int columna) {
-        if (!esTurnoHumano) return;
-        if (tableroActual.getMatriz()[fila][columna] != Simbolo.VACIO) return;
+        // En humano vs humano ambos turnos son controlados por clic y en humano vs computadora solo se permite el turno del humano.
+        if (esContraComputadora && !turnoJugador1) {
+            return;
+        }
 
-        tableroActual = tableroActual.realizarJugada(fila, columna, simboloHumano);
+        if (tableroActual.getMatriz()[fila][columna] != Simbolo.VACIO) {
+            return;
+        }
+
+        char simboloActual;
+        if (turnoJugador1) {
+        simboloActual = simboloJugador1;
+        } 
+        else {
+        simboloActual = simboloJugador2;
+        }
+
+        tableroActual = tableroActual.realizarJugada(fila, columna, simboloActual);
         actualizarUI();
 
-        if (verificarFinJuego()) return;
+        if (verificarFinJuego()) {
+            return;
+        }
 
-        esTurnoHumano = false;
-        lblEstado.setText("Pensando la computadora...");
-        ejecutarTurnoIA();
+        turnoJugador1 = !turnoJugador1;
+        actualizarEstado();
+
+        if (esContraComputadora && !turnoJugador1) {
+            ejecutarTurnoComputadora();
+        }
     }
 
-    private void ejecutarTurnoIA() {
+    private void ejecutarTurnoComputadora() {
+        lblEstado.setText("Pensando la computadora...");
+
         Movimiento mejorMov = ia.getMejorMovimiento(tableroActual);
 
         if (mejorMov != null) {
-            tableroActual = tableroActual.realizarJugada(mejorMov.getFila(), mejorMov.getColumna(), simboloIA);
+            tableroActual = tableroActual.realizarJugada(
+                    mejorMov.getFila(), mejorMov.getColumna(), simboloJugador2);
             actualizarUI();
         }
 
         if (!verificarFinJuego()) {
-            esTurnoHumano = true;
-            lblEstado.setText("Turno de: Humano (" + simboloHumano + ")");
+            turnoJugador1 = true;
+            actualizarEstado();
+        }
+    }
+
+    private void actualizarEstado() {
+        char simbolo;
+        if (turnoJugador1) {
+        simbolo = simboloJugador1;
+        } 
+        else {
+        simbolo = simboloJugador2;
+        }
+
+        if (esContraComputadora) {
+            if (turnoJugador1) {
+            lblEstado.setText("Turno de: Humano (" + simbolo + ")");
+            } 
+            else {
+            lblEstado.setText("Pensando la computadora...");
+            }
+        } 
+        else {
+        lblEstado.setText("Turno del Jugador " + simbolo);
         }
     }
 
     private void actualizarUI() {
         char[][] matriz = tableroActual.getMatriz();
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 char val = matriz[i][j];
-                botonesTablero[i][j].setText(val == Simbolo.VACIO ? "" : String.valueOf(val));
+                botonesTablero[i][j].setText(
+                        val == Simbolo.VACIO ? "" : String.valueOf(val));
             }
         }
     }
@@ -120,7 +169,20 @@ public class GameController {
         char ganador = tableroActual.verificarGanador();
 
         if (ganador != Simbolo.VACIO) {
-            String mensaje = (ganador == simboloHumano) ? "¡Has Ganado!" : "¡Ha Ganado la Computadora!";
+            String mensaje;
+
+            if (esContraComputadora) {
+                if (ganador == simboloJugador1) {
+                 mensaje = "¡Has Ganado!";
+                } 
+                else {
+                mensaje = "¡Ha Ganado la Computadora!";
+                }
+            } 
+            else {
+            mensaje = "¡Ha Ganado el Jugador " + ganador + "!";
+            }
+
             lblEstado.setText(mensaje);
             mostrarAlerta("Fin del Juego", mensaje);
             bloquearTablero();
@@ -155,17 +217,19 @@ public class GameController {
 
     @FXML
     private void handleReiniciar() {
-        iniciarPartida(simboloHumano, simboloIA, configuracionInicioHumano);
+        iniciarPartida(simboloJugador1, simboloJugador2,
+                configuracionInicioJugador1, esContraComputadora);
     }
 
     @FXML
     private void handleVolverMenu(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/proyecto/primary.fxml"));
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/com/mycompany/proyecto/primary.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 380, 320));
+            stage.setScene(new Scene(root, 380, 400));
             stage.setTitle("Tres en Raya - Configuración");
             stage.show();
         } catch (IOException e) {
