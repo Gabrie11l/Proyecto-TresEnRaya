@@ -6,6 +6,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+
 
 <VBox alignment="CENTER" spacing="16.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mycompany.proyecto.controlador.PrimaryController">
     <padding>
@@ -20,25 +24,32 @@
 
         <VBox alignment="CENTER_LEFT" spacing="8.0">
             <children>
-                <Label text="Modo de juego:" />
-                <ComboBox fx:id="cmbModo" prefWidth="250.0" />
-            </children>
-        </VBox>
-
-        <VBox alignment="CENTER_LEFT" spacing="8.0">
-            <children>
                 <Label text="Selecciona tu símbolo:" />
-                <ComboBox fx:id="cmbSimbolo" prefWidth="250.0" />
+                <HBox alignment="CENTER" spacing="10">
+                    <children>
+                        <ToggleButton fx:id="btnX" text="X" prefWidth="80" prefHeight="80" selected="true">
+                            <toggleGroup><ToggleGroup fx:id="grupoSimbolo" /></toggleGroup>
+                        </ToggleButton>
+                        <ToggleButton fx:id="btnO" text="O" prefWidth="80" prefHeight="80" toggleGroup="$grupoSimbolo"/>
+                    </children>
+                </HBox>
             </children>
         </VBox>
 
         <VBox alignment="CENTER_LEFT" spacing="8.0">
             <children>
-                <Label text="¿Quién inicia el juego?:" />
-                <ComboBox fx:id="cmbIniciador" prefWidth="250.0" />
-            </children>
+                <Label text="Modo de Juego" />
+                <HBox alignment="CENTER" spacing="10">
+                    <children>
+                        <ToggleButton fx:id="btnJvsM" text="J vs M" selected="true" >
+                            <toggleGroup><ToggleGroup fx:id ="grupoModo" /></toggleGroup>
+                        </ToggleButton>
+                        <ToggleButton fx:id="btnJvsJ" text="J vs J" toggleGroup="$grupoModo" />
+                    </children>
+                </HBox>
+             </children>
         </VBox>
-
-        <Button fx:id="btnIniciar" mnemonicParsing="false" onAction="#handleIniciarJuego" prefWidth="250.0" style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="Iniciar Partida" />
+      
+        <Button fx:id="btnIniciar" mnemonicParsing="false" onAction="#handleIniciar" prefWidth="250.0" style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px;" text="Iniciar" />
     </children>
 </VBox>

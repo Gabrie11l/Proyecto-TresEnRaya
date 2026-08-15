@@ -9,61 +9,40 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
 
 public class PrimaryController {
-
+@FXML
+    private ToggleButton btnX, btnO;
+    
+    @FXML 
+    private ToggleGroup grupoSimbolo;
+    
     @FXML
-    private ComboBox<String> cmbModo;
-
+    private ToggleButton btnJvsM, btnJvsJ;
+    
     @FXML
-    private ComboBox<String> cmbSimbolo;
+    private ToggleGroup grupoModo;
 
-    @FXML
-    private ComboBox<String> cmbIniciador;
-
-    @FXML
-    public void initialize() {
-        cmbModo.getItems().addAll("Humano vs Computadora", "Humano vs Humano");
-        cmbModo.setValue("Humano vs Computadora");
-
-        cmbSimbolo.getItems().addAll("X", "O");
-        cmbSimbolo.setValue("X");
-
-        actualizarOpcionesInicio();
-        cmbModo.setOnAction(e -> actualizarOpcionesInicio());
+    //@FXML
+   // private ComboBox<String> cmbIniciador;
+    
+    private char getSimboloSeleccionado(){
+        return grupoSimbolo.getSelectedToggle()== btnX ? Simbolo.X : Simbolo.O;
     }
-
-    private void actualizarOpcionesInicio() {
-        cmbIniciador.getItems().clear();
-
-        if ("Humano vs Humano".equals(cmbModo.getValue())) {
-            cmbIniciador.getItems().addAll("Jugador X", "Jugador O");
-            cmbIniciador.setValue("Jugador X");
-        } else {
-            cmbIniciador.getItems().addAll("Humano", "Computadora");
-            cmbIniciador.setValue("Humano");
-        }
-    }
-
+    
     @FXML
-    private void handleIniciarJuego(ActionEvent event) throws IOException {
-        boolean vsHumano = "Humano vs Humano".equals(cmbModo.getValue());
-        char simboloHumano = cmbSimbolo.getValue().charAt(0);
-        char simboloOponente = (simboloHumano == Simbolo.X) ? Simbolo.O : Simbolo.X;
-
-        boolean empiezaJugador1;
-        if (vsHumano) {
-            empiezaJugador1 = "Jugador X".equals(cmbIniciador.getValue());
-        } else {
-            empiezaJugador1 = "Humano".equals(cmbIniciador.getValue());
-        }
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/proyecto/game.fxml"));
+    private void handleIniciar(ActionEvent event) throws IOException {
+        char simbolo= getSimboloSeleccionado();
+        boolean vsHumano = btnJvsJ.isSelected();
+ 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/proyecto/Start.fxml"));
         Parent root = loader.load();
 
-        GameController gameController = loader.getController();
-        gameController.iniciarPartida(simboloHumano, simboloOponente, empiezaJugador1, !vsHumano);
+        StartController startController = loader.getController();
+        startController.configurar(simbolo, vsHumano);
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root, 400, 500));
