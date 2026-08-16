@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.stage.Stage;
@@ -26,6 +27,9 @@ public class StartController {
     
     @FXML
     private ToggleGroup grupoBotones;
+    
+    @FXML
+    private Button btnIniciar;
     
     private char simboloElegido;
     private boolean vsHumano;
@@ -42,6 +46,12 @@ public class StartController {
         }
         btn1.setSelected(true);
     }
+    
+    @FXML
+    public void initialize(){
+        btnIniciar.disableProperty().bind(grupoBotones.selectedToggleProperty().isNull());
+    }
+    
     @FXML
     private void handleIniciarJuego(ActionEvent event) throws IOException {
         boolean jugador1 = btn1.isSelected();

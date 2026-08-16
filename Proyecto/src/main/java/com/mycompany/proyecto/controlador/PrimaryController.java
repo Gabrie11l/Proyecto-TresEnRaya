@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -25,6 +26,9 @@ public class PrimaryController {
     
     @FXML
     private ToggleGroup grupoModo;
+    
+    @FXML
+    private Button btnIniciar;
 
     //@FXML
    // private ComboBox<String> cmbIniciador;
@@ -34,10 +38,18 @@ public class PrimaryController {
     }
     
     @FXML
+    public void initialize(){
+        btnIniciar.disableProperty().bind(grupoSimbolo.selectedToggleProperty().isNull()
+                .or(grupoModo.selectedToggleProperty().isNull()));
+        btnX.setStyle("-fx-font-size: 20px");
+        btnO.setStyle("-fx-font-size: 20px");
+    }
+    
+    @FXML
     private void handleIniciar(ActionEvent event) throws IOException {
         char simbolo= getSimboloSeleccionado();
         boolean vsHumano = btnJvsJ.isSelected();
- 
+        
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/mycompany/proyecto/Start.fxml"));
         Parent root = loader.load();
 
