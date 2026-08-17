@@ -28,7 +28,7 @@ public class minimax {
             Tablero tableroNivel1 = actualTablero.realizarJugada(movDeMaquina.getFila(), movDeMaquina.getColumna(), MaquinaSimbolo);
             Node<Tablero> nodoNivel1 = new Node<>(tableroNivel1);
             
-            
+            //Agregado el IF por Jared 
             if (tableroNivel1.verificarGanador() == Simbolo.VACIO && !tableroNivel1.estaLleno()) {
                 for(Movimiento movDeJugador : tableroNivel1.obtenerCasillasVacias()){
                     Tablero tableroNivel2 = tableroNivel1.realizarJugada(movDeJugador.getFila(), movDeJugador.getColumna(), JugadorSimbolo);
